@@ -10,6 +10,11 @@ public class CarBehaviour : MonoBehaviour {
 	 * - Braking: Force down, Friction of wheels, brake torque
 	 * - SteerFactor depending on carspeed
 	 * 
+	 * 29.03.2015
+	 * - Smoke Emission, based on speed
+	 * - Brake Audio
+	 * - Full / Normal Brake
+	 * - Check if car is on ground (for smoke emission, brake audio)
 	 */ 
 
 	private const float MAX_SPEED_KMH = 150f;
@@ -42,9 +47,6 @@ public class CarBehaviour : MonoBehaviour {
 	private AudioSource		_audioSourceBrake;
 	private Material		_stdBackLightMaterial;
 
-	private float thrustTorque;
-
-	// Use this for initialization
 	void Start ()
 	{
 		_rigidBody = GetComponent<Rigidbody> ();
@@ -53,6 +55,7 @@ public class CarBehaviour : MonoBehaviour {
 		_frictionFRTmp = wheelFR.forwardFriction;
 
 		_dustL = GameObject.Find ("DustL").GetComponent<ParticleSystem> ();
+		_dustR = GameObject.Find ("DustR").GetComponent<ParticleSystem> ();
 
 		_audioSourceBrake = (AudioSource)gameObject.AddComponent<AudioSource>();
 		_audioSourceBrake.clip = audioClipBrake;
@@ -70,15 +73,14 @@ public class CarBehaviour : MonoBehaviour {
 		_motorTorque = maxTorque * Input.GetAxis("Vertical");
 		guiSpeed.text = _currentSpeedKMH.ToString("0") + " KMH";
 
-
-		/* MAX SPEED */
+		// MAX SPEED
 		if (_currentSpeedKMH > MAX_SPEED_KMH)
 		{
 			_rigidBody.velocity = (MAX_SPEED_KMH/3.6f) * _rigidBody.velocity.normalized;
 		}
 
 
-		/* ACCLERATION / BRAKING */
+		// ACCLERATION / BRAKING
 		// 0: still, 1: forward, -1: backward
 		int drivingDirection = 0;
 
@@ -91,15 +93,13 @@ public class CarBehaviour : MonoBehaviour {
 		bool doBraking = false;
 		doBraking = (Input.GetAxis ("Vertical") < -0.1 && drivingDirection == 1) || (Input.GetAxis ("Vertical") > 0.1 && drivingDirection == -1);
 
-		/* ADD FORCE TO WHEELS DEPENDING ON SPEED */
+		/* ADD FORCE DOWN TO WHEELS DEPENDING ON SPEED */
 		wheelFL.attachedRigidbody.AddForce(-transform.up * 100 * wheelFL.attachedRigidbody.velocity.magnitude);
 		wheelFR.attachedRigidbody.AddForce(-transform.up * 100 * wheelFR.attachedRigidbody.velocity.magnitude);
 
-		//Debug.Log (doBraking);
-
 		if (doBraking || FullBrake()) {
 
-			// Brake or Fullbrake
+			// BRAKE OR FULLBRAKE
 
 			_frictionFLTmp.extremumSlip = 1f;
 			_frictionFLTmp.extremumValue = 1.5f;
@@ -125,21 +125,40 @@ public class CarBehaviour : MonoBehaviour {
 				_brakeTorque = normalBrake;
 			}
 
-			//Debug.Log(_brakeTorque);
-
 			wheelFL.motorTorque = 0;
 			wheelFR.motorTorque = 0;
 			wheelFL.brakeTorque = _brakeTorque;
 			wheelFR.brakeTorque = _brakeTorque;
-			
-			_dustL.enableEmission = true;
+
+			// SMOKE / BRAKE AUDIO
+			if(_currentSpeedKMH > 5)
+			{
+				_dustL.emissionRate = _dustR.emissionRate = Mathf.Max(_currentSpeedKMH * 1.3f, 2);
+
+				if(wheelRL.isGrounded) _dustL.enableEmission = true;
+				if(wheelRR.isGrounded) _dustR.enableEmission = true;
+
+				if(!_audioSourceBrake.isPlaying && wheelRL.isGrounded && wheelRR.isGrounded)
+				{
+					_audioSourceBrake.Play();
+				}
+			}
+			else
+			{
+				_dustL.enableEmission = _dustR.enableEmission = false;
+
+				if(_audioSourceBrake.isPlaying)
+				{
+					_audioSourceBrake.Stop();
+				}
+			}
 
 			backLightL.GetComponent<Renderer>().material = brakeLightMaterial;
 			backLightR.GetComponent<Renderer>().material = brakeLightMaterial;
 			
 		} else {
 
-			// Accelerate or nothing
+			// ACCELERATE OR NOTHING
 
 			_frictionFLTmp.extremumSlip = 0.4f;
 			_frictionFLTmp.extremumValue = 1;
@@ -154,12 +173,17 @@ public class CarBehaviour : MonoBehaviour {
 			wheelFL.motorTorque = _motorTorque;
 			wheelFR.motorTorque = _motorTorque;
 
-			_dustL.enableEmission = false;
+			// SMOKE
+			_dustL.enableEmission = _dustR.enableEmission = false;
+
+			// BRAKE AUDIO
+			if(_audioSourceBrake.isPlaying)
+			{
+				_audioSourceBrake.Stop();
+			}
 
 			if(drivingDirection == -1)
 			{
-				//Debug.Log("show backwards light");
-				
 				backLightL.GetComponent<Renderer>().material = backLightMaterial;
 				backLightR.GetComponent<Renderer>().material = backLightMaterial;
 			}
@@ -170,15 +194,10 @@ public class CarBehaviour : MonoBehaviour {
 			}
 		}
 
-
-
-		/* STEERING */
+		// STEERING
 		float steerFactor = Mathf.Max (-10f / MAX_SPEED_KMH * _currentSpeedKMH + 20f);
 		wheelFL.steerAngle = steerFactor * Input.GetAxis("Horizontal");
 		wheelFR.steerAngle = wheelFL.steerAngle;
-
-
-
 	}
 
 	// OnGUI is called on every frame when the orthographic GUI is rendered
