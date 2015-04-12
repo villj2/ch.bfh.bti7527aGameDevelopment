@@ -4,6 +4,7 @@ using System.Collections;
 public class GUIBehaviour : MonoBehaviour {
 
 	public GUIText GUITime;
+	public GUIText GUICountdown;
 	public WheelCollider WheelColFL;
 	
 	private float _pastTime = 0;
@@ -27,6 +28,9 @@ public class GUIBehaviour : MonoBehaviour {
 				if(hit.collider.gameObject.tag == "Finish")
 				{
 					_isFinished = true;
+
+					GUICountdown.text = "WIN!";
+					GUICountdown.enabled = true;
 				}
 			}
 			
@@ -35,7 +39,7 @@ public class GUIBehaviour : MonoBehaviour {
 				_pastTime += Time.deltaTime;
 			}
 			
-			GUITime.text = _pastTime.ToString ("0.0");
+			GUITime.text = _pastTime.ToString ("0.0") + " sec";
 		}
 	}
 }

@@ -15,6 +15,13 @@ public class CarBehaviour : MonoBehaviour {
 	 * - Brake Audio
 	 * - Full / Normal Brake
 	 * - Check if car is on ground (for smoke emission, brake audio)
+	 * 
+	 * 12.04.2015
+	 * - Countdown Audio
+	 * - Countdown Text
+	 * - Car Engine Start Audio
+	 * - Menuwechsel
+	 * - Platform Rotation
 	 */ 
 
 	private const float MAX_SPEED_KMH = 150f;
@@ -31,6 +38,7 @@ public class CarBehaviour : MonoBehaviour {
 	public Texture2D        guiSpeedPointer;
 	public Transform		centerOfMass;
 	public AudioClip		audioClipBrake;
+	public AudioClip		audioClipEngineStart;
 	public Material			brakeLightMaterial;
 	public Material 		backLightMaterial;
 	public GameObject		backLightL;
@@ -45,6 +53,7 @@ public class CarBehaviour : MonoBehaviour {
 	private ParticleSystem	_dustR;
 	private ParticleSystem 	_dustL;
 	private AudioSource		_audioSourceBrake;
+	private AudioSource		_audioSourceEngineStart;
 	private Material		_stdBackLightMaterial;
 
 	void Start ()
@@ -62,6 +71,13 @@ public class CarBehaviour : MonoBehaviour {
 		_audioSourceBrake.loop = true;
 		_audioSourceBrake.volume = 0.7f;
 		_audioSourceBrake.playOnAwake = false;
+
+		_audioSourceEngineStart = (AudioSource)gameObject.AddComponent<AudioSource>();
+		_audioSourceEngineStart.clip = audioClipEngineStart;
+		_audioSourceEngineStart.loop = false;
+		_audioSourceEngineStart.volume = 1f;
+		_audioSourceEngineStart.playOnAwake = true;
+		_audioSourceEngineStart.Play ();
 
 		_stdBackLightMaterial = backLightL.GetComponent<Renderer>().material;
 	}
@@ -217,6 +233,7 @@ public class CarBehaviour : MonoBehaviour {
 		float gearSpeedDelta = 25.0f;
 		int gear = System.Math.Min((int)(_currentSpeedKMH / gearSpeedDelta), 5);
 		float gearSpeedMin = gear * gearSpeedDelta;
+		GetComponent<AudioSource> ().volume = 1;
 		GetComponent<AudioSource>().pitch = (_currentSpeedKMH - gearSpeedMin) / gearSpeedDelta * 0.5f + 0.4f;
 	}
 
