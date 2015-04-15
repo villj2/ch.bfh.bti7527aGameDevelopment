@@ -13,7 +13,7 @@ public class MenuCylinder : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.Rotate(Vector3.down * Time.deltaTime * RotationSpeed);
-		Car.transform.Rotate(Vector3.down * Time.deltaTime * RotationSpeed);
+		//transform.Rotate(Vector3.down * Time.deltaTime * RotationSpeed);
+		//Car.transform.Rotate(Vector3.down * Time.deltaTime * RotationSpeed);
 	}
 }
