@@ -22,6 +22,11 @@ public class CarBehaviour : MonoBehaviour {
 	 * - Car Engine Start Audio
 	 * - Menuwechsel
 	 * - Platform Rotation
+	 * 
+	 * 19.04.2015
+	 * - Menu: Car Color Modification
+	 * - Menu: Car Suspension Modification
+	 * - Saving Properties in Menu for Scene1
 	 */ 
 
 	private const float MAX_SPEED_KMH = 150f;

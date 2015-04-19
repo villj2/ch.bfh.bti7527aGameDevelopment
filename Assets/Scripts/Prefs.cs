@@ -20,9 +20,12 @@ public class Prefs : MonoBehaviour {
 		carBodySaturation = PlayerPrefs.GetFloat("carBodySaturation", 1.0f);
 		carBodyLuminance = PlayerPrefs.GetFloat("carBodyLuminance", 1.0f);
 
-		suspensionDistance = PlayerPrefs.GetFloat ("suspensionDistance", 0.2f);
+		/*suspensionDistance = PlayerPrefs.GetFloat ("suspensionDistance", 0.2f);
 		suspensionSpring = PlayerPrefs.GetFloat ("suspensionSpring", 35000f);
-		suspensionDamper = PlayerPrefs.GetFloat ("suspensionDamper", 4500f);
+		suspensionDamper = PlayerPrefs.GetFloat ("suspensionDamper", 4500f);*/
+		suspensionDistance = 0.2f;
+		suspensionSpring = 35000f;
+		suspensionDamper = 4500f;
 	}
 
 	public static void Save()
@@ -30,8 +33,6 @@ public class Prefs : MonoBehaviour {
 		PlayerPrefs.SetFloat("carBodyHue", carBodyHue);
 		PlayerPrefs.SetFloat("carBodySaturation", carBodySaturation);
 		PlayerPrefs.SetFloat("carBodyLuminance", carBodyLuminance);
-
-		Debug.Log ("suspensionDistance: " + suspensionDistance);
 
 		PlayerPrefs.SetFloat ("suspensionDistance", suspensionDistance);
 		PlayerPrefs.SetFloat ("suspensionSpring", suspensionSpring);
@@ -49,7 +50,7 @@ public class Prefs : MonoBehaviour {
 		frWheelCol.suspensionDistance = suspensionDistance;
 		rlWheelCol.suspensionDistance = suspensionDistance;
 		rrWheelCol.suspensionDistance = suspensionDistance;
-		
+
 		JointSpring mySpringF = new JointSpring ();
 		JointSpring mySpringR = new JointSpring ();
 		mySpringF.spring = suspensionSpring;
