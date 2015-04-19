@@ -80,6 +80,8 @@ public class CarBehaviour : MonoBehaviour {
 		_audioSourceEngineStart.Play ();
 
 		_stdBackLightMaterial = backLightL.GetComponent<Renderer>().material;
+
+		SetWheelColliderSuspension();
 	}
 	
 	// Update is called once per frame constanc time per frame
@@ -241,5 +243,18 @@ public class CarBehaviour : MonoBehaviour {
 	{
 		// check if space is down
 		return Input.GetKey ("space");
+	}
+
+	void SetWheelColliderSuspension ()
+	{
+		Debug.Log (PlayerPrefs.GetFloat ("suspensionDistance", 0.2f));
+		Debug.Log (PlayerPrefs.GetFloat ("suspensionSpring", 35000f));
+		Debug.Log (PlayerPrefs.GetFloat ("suspensionDamper", 4500f));
+
+		Prefs.suspensionDistance = PlayerPrefs.GetFloat ("suspensionDistance", 0.2f);
+		Prefs.suspensionSpring = PlayerPrefs.GetFloat ("suspensionSpring", 35000f);
+		Prefs.suspensionDamper = PlayerPrefs.GetFloat ("suspensionDamper", 4500f);
+
+		Prefs.SetWheelColliderSuspension (ref wheelFL, ref wheelFR, ref wheelRL, ref wheelRR);
 	}
 }

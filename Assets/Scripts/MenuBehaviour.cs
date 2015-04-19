@@ -54,18 +54,21 @@ public class MenuBehaviour : MonoBehaviour {
 	{
 		Prefs.suspensionDistance = val;
 		Prefs.SetWheelColliderSuspension (ref WheelColliderFL, ref WheelColliderFR, ref WheelColliderRL, ref WheelColliderRR);
+		Prefs.Save ();
 	}
 
 	public void OnSliderSpringChange(float val)
 	{
 		Prefs.suspensionSpring = val;
 		Prefs.SetWheelColliderSuspension (ref WheelColliderFL, ref WheelColliderFR, ref WheelColliderRL, ref WheelColliderRR);
+		Prefs.Save ();
 	}
 
 	public void OnSliderDamperChange(float val)
 	{
 		Prefs.suspensionDamper = val;
 		Prefs.SetWheelColliderSuspension (ref WheelColliderFL, ref WheelColliderFR, ref WheelColliderRL, ref WheelColliderRR);
+		Prefs.Save ();
 	}
 
 	void OnApplicationQuit()
