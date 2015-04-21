@@ -13,7 +13,11 @@ public class MenuBehaviour : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
-		Prefs.Load ();
+		Debug.Log ("Menu behaviour load");
+
+		// FIXME verursacht falsche target position
+		//Prefs.Load ();
+		//Prefs.SetWheelColliderSuspension (ref WheelColliderFL, ref WheelColliderFR, ref WheelColliderRL, ref WheelColliderRR);
 	}
 	
 	// Update is called once per frame

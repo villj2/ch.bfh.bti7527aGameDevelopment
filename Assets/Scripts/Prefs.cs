@@ -46,6 +46,15 @@ public class Prefs : MonoBehaviour {
 
 	public static void SetWheelColliderSuspension(ref WheelCollider flWheelCol, ref WheelCollider frWheelCol, ref WheelCollider rlWheelCol, ref WheelCollider rrWheelCol)
 	{
+		if (suspensionDamper == 0)
+			suspensionDamper = 4500f;
+
+		if (suspensionSpring == 0)
+			suspensionSpring = 35000f;
+
+		if (suspensionDistance == 0)
+			suspensionDistance = 0.2f;
+
 		flWheelCol.suspensionDistance = suspensionDistance;
 		frWheelCol.suspensionDistance = suspensionDistance;
 		rlWheelCol.suspensionDistance = suspensionDistance;

@@ -35,7 +35,7 @@ public class CarBehaviour : MonoBehaviour {
 	public WheelCollider 	wheelFR;
 	public WheelCollider 	wheelRL;
 	public WheelCollider 	wheelRR;
-	public float 			maxTorque = 500f;
+	public float 			maxTorque = 20000f; //500f;
 	public float			normalBrake = 30000f;
 	public float			fullBrake = 40000f;
 	public GUIText 			guiSpeed;
@@ -86,7 +86,8 @@ public class CarBehaviour : MonoBehaviour {
 
 		_stdBackLightMaterial = backLightL.GetComponent<Renderer>().material;
 
-		SetWheelColliderSuspension();
+		// FIXME verursacht falsche target position
+		//SetWheelColliderSuspension();
 	}
 	
 	// Update is called once per frame constanc time per frame
@@ -94,6 +95,7 @@ public class CarBehaviour : MonoBehaviour {
 	{
 		_currentSpeedKMH = _rigidBody.velocity.magnitude * 3.6f;
 		_motorTorque = maxTorque * Input.GetAxis("Vertical");
+
 		guiSpeed.text = _currentSpeedKMH.ToString("0") + " KMH";
 
 		// MAX SPEED
