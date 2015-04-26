@@ -27,9 +27,17 @@ public class CarBehaviour : MonoBehaviour {
 	 * - Menu: Car Color Modification
 	 * - Menu: Car Suspension Modification
 	 * - Saving Properties in Menu for Scene1
+	 * 
+	 * 26.04.2015
+	 * - Skidmarks + Alignment (center of wheel)
+	 * - Different Frictions full / normal brake
+	 * - No smoke / sound on normal braking
+	 * - Smoke / Sound / Skidmarks while drifting
 	 */ 
 
 	private const float MAX_SPEED_KMH = 150f;
+
+	public static bool IsDrifting = false;
 
 	public WheelCollider 	wheelFL;
 	public WheelCollider 	wheelFR;
@@ -52,8 +60,7 @@ public class CarBehaviour : MonoBehaviour {
 	private float           _currentSpeedKMH;
 	private Rigidbody 		_rigidBody;
 	private float			_motorTorque;
-	private WheelFrictionCurve _frictionFLTmp;
-	private WheelFrictionCurve _frictionFRTmp;
+	private WheelFrictionCurve _frictionTmp;
 	private float			_brakeTorque;
 	private ParticleSystem	_dustR;
 	private ParticleSystem 	_dustL;
@@ -64,9 +71,8 @@ public class CarBehaviour : MonoBehaviour {
 	void Start ()
 	{
 		_rigidBody = GetComponent<Rigidbody> ();
-		//_rigidBody.centerOfMass = centerOfMass.transform.localPosition;
-		_frictionFLTmp = wheelFL.forwardFriction;
-		_frictionFRTmp = wheelFR.forwardFriction;
+		_rigidBody.centerOfMass = centerOfMass.transform.localPosition;
+		_frictionTmp = wheelFL.forwardFriction;
 
 		_dustL = GameObject.Find ("DustL").GetComponent<ParticleSystem> ();
 		_dustR = GameObject.Find ("DustR").GetComponent<ParticleSystem> ();
@@ -86,8 +92,7 @@ public class CarBehaviour : MonoBehaviour {
 
 		_stdBackLightMaterial = backLightL.GetComponent<Renderer>().material;
 
-		// FIXME verursacht falsche target position
-		//SetWheelColliderSuspension();
+		SetWheelColliderSuspension();
 	}
 	
 	// Update is called once per frame constanc time per frame
@@ -115,6 +120,9 @@ public class CarBehaviour : MonoBehaviour {
 			drivingDirection = -1;
 		}
 
+		// Check if car is drifting
+		IsDrifting = Vector3.Angle (transform.forward, _rigidBody.velocity) > 20f && _currentSpeedKMH > 5 && drivingDirection == 1;
+
 		bool doBraking = false;
 		doBraking = (Input.GetAxis ("Vertical") < -0.1 && drivingDirection == 1) || (Input.GetAxis ("Vertical") > 0.1 && drivingDirection == -1);
 
@@ -126,29 +134,33 @@ public class CarBehaviour : MonoBehaviour {
 
 			// BRAKE OR FULLBRAKE
 
-			_frictionFLTmp.extremumSlip = 1f;
-			_frictionFLTmp.extremumValue = 1.5f;
-			_frictionFLTmp.asymptoteSlip = 1f;
-			_frictionFLTmp.asymptoteValue = 1.5f;
-
-			_frictionFRTmp.extremumSlip = 1f;
-			_frictionFRTmp.extremumValue = 1.5f;
-			_frictionFRTmp.asymptoteSlip = 1f;
-			_frictionFRTmp.asymptoteValue = 1.5f;
-
-			wheelFL.forwardFriction = _frictionFLTmp;
-			wheelFR.forwardFriction = _frictionFRTmp;
-			wheelFL.sidewaysFriction = _frictionFLTmp;
-			wheelFR.sidewaysFriction = _frictionFRTmp;
-
 			if(FullBrake())
 			{
+				_frictionTmp.extremumSlip = 1f;
+				_frictionTmp.extremumValue = 1.5f;
+				_frictionTmp.asymptoteSlip = 1f;
+				_frictionTmp.asymptoteValue = 1.5f;
+
 				_brakeTorque = fullBrake;
 			} 
 			else
 			{
+				_frictionTmp.extremumSlip = 0.7f;
+				_frictionTmp.extremumValue = 1f;
+				_frictionTmp.asymptoteSlip = 0.7f;
+				_frictionTmp.asymptoteValue = 1f;
+
 				_brakeTorque = normalBrake;
 			}
+
+			wheelFL.forwardFriction = _frictionTmp;
+			wheelFL.sidewaysFriction = _frictionTmp;
+			wheelFR.forwardFriction = _frictionTmp;
+			wheelFR.sidewaysFriction = _frictionTmp;
+			wheelRL.forwardFriction = _frictionTmp;
+			wheelRL.sidewaysFriction = _frictionTmp;
+			wheelRR.forwardFriction = _frictionTmp;
+			wheelRR.sidewaysFriction = _frictionTmp;
 
 			wheelFL.motorTorque = 0;
 			wheelFR.motorTorque = 0;
@@ -156,9 +168,12 @@ public class CarBehaviour : MonoBehaviour {
 			wheelFR.brakeTorque = _brakeTorque;
 
 			// SMOKE / BRAKE AUDIO
-			if(_currentSpeedKMH > 5)
+			if(_currentSpeedKMH > 5 && FullBrake())
 			{
-				_dustL.emissionRate = _dustR.emissionRate = Mathf.Max(_currentSpeedKMH * 1.3f, 2);
+				if(!IsDrifting)
+				{
+					_dustL.emissionRate = _dustR.emissionRate = Mathf.Max(_currentSpeedKMH * 1.3f, 2);
+				}
 
 				if(wheelRL.isGrounded) _dustL.enableEmission = true;
 				if(wheelRR.isGrounded) _dustR.enableEmission = true;
@@ -185,13 +200,15 @@ public class CarBehaviour : MonoBehaviour {
 
 			// ACCELERATE OR NOTHING
 
-			_frictionFLTmp.extremumSlip = 0.4f;
-			_frictionFLTmp.extremumValue = 1;
-			_frictionFRTmp.extremumSlip = 0.4f;
-			_frictionFRTmp.extremumValue = 1;
-			
-			wheelFL.forwardFriction = _frictionFLTmp;
-			wheelFR.forwardFriction = _frictionFRTmp;
+			_frictionTmp.extremumSlip = 0.4f;
+			_frictionTmp.extremumValue = 1;
+			_frictionTmp.extremumSlip = 0.4f;
+			_frictionTmp.extremumValue = 1;
+
+			wheelFL.forwardFriction = _frictionTmp;
+			wheelFR.forwardFriction = _frictionTmp;
+			wheelRL.forwardFriction = _frictionTmp;
+			wheelRR.forwardFriction = _frictionTmp;
 			
 			wheelFL.brakeTorque = 0f;
 			wheelFR.brakeTorque = 0f;
@@ -199,10 +216,13 @@ public class CarBehaviour : MonoBehaviour {
 			wheelFR.motorTorque = _motorTorque;
 
 			// SMOKE
-			_dustL.enableEmission = _dustR.enableEmission = false;
+			if(!IsDrifting)
+			{
+				_dustL.enableEmission = _dustR.enableEmission = false;
+			}
 
 			// BRAKE AUDIO
-			if(_audioSourceBrake.isPlaying)
+			if(_audioSourceBrake.isPlaying && !IsDrifting)
 			{
 				_audioSourceBrake.Stop();
 			}
@@ -217,6 +237,19 @@ public class CarBehaviour : MonoBehaviour {
 				backLightL.GetComponent<Renderer>().material = _stdBackLightMaterial;
 				backLightR.GetComponent<Renderer>().material = _stdBackLightMaterial;
 			}
+		}
+
+		// Play Audio if drifting and show smoke
+		if (IsDrifting) {
+
+			if(!_audioSourceBrake.isPlaying && wheelRL.isGrounded && wheelRR.isGrounded)
+			{
+				_audioSourceBrake.Play();
+			}
+
+			_dustL.emissionRate = _dustR.emissionRate = Mathf.Max(_currentSpeedKMH * 3f, 4);
+			if(wheelRL.isGrounded) _dustL.enableEmission = true;
+			if(wheelRR.isGrounded) _dustR.enableEmission = true;
 		}
 
 		// STEERING

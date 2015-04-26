@@ -46,11 +46,24 @@ public class WheelBehaviour : MonoBehaviour {
 	{
 		Vector3 wheelVelo = wheelCollider.attachedRigidbody.GetPointVelocity (hit.point);
 
-		if(Input.GetKey("space"))
+		if(Input.GetKey("space") || CarBehaviour.IsDrifting)
 		{
 			if (Vector3.Distance(_skidmarkLastPos, hit.point) > 0.1f)
 			{
-				_skidmarkLast = _skidmarks.Add(hit.point + wheelVelo*Time.deltaTime, hit.normal, 0.5f, _skidmarkLast);
+				Vector3 posNew = hit.point;
+
+				// adjust skidmark position according to WheelCollider Position (left or right) to center skidmark
+				if(wheelCollider.name == "WheelColliderFL" || wheelCollider.name == "WheelColliderRL")
+				{
+					posNew.x += 0.15f;
+				}
+
+				if(wheelCollider.name == "WheelColliderFR" || wheelCollider.name == "WheelColliderRR")
+				{
+					posNew.x -= 0.15f;
+				}
+
+				_skidmarkLast = _skidmarks.Add(posNew + wheelVelo*Time.deltaTime, hit.normal, 0.5f, _skidmarkLast);
 				_skidmarkLastPos = hit.point;
 			}
 		}
