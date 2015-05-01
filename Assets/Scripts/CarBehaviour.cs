@@ -121,7 +121,26 @@ public class CarBehaviour : MonoBehaviour {
 		}
 
 		// Check if car is drifting
-		IsDrifting = Vector3.Angle (transform.forward, _rigidBody.velocity) > 20f && _currentSpeedKMH > 5 && drivingDirection == 1;
+		//IsDrifting = Vector3.Angle (transform.forward, _rigidBody.velocity) > 20f && _currentSpeedKMH > 5 && drivingDirection == 1;
+
+		WheelHit hit;
+		bool driftFL = false;
+		bool driftFR = false;
+		bool driftRL = false;
+		bool driftRR = false;
+		if (wheelFL.GetGroundHit (out hit)) {
+			driftFL = Mathf.Abs(hit.sidewaysSlip) > 0.2f;
+		}
+		if (wheelFR.GetGroundHit (out hit)) {
+			driftFR = Mathf.Abs(hit.sidewaysSlip) > 0.2f;
+		}
+		if (wheelRL.GetGroundHit (out hit)) {
+			driftRL = Mathf.Abs(hit.sidewaysSlip) > 0.2f;
+		}
+		if (wheelRR.GetGroundHit (out hit)) {
+			driftRR = Mathf.Abs(hit.sidewaysSlip) > 0.2f;
+		}
+		IsDrifting = driftFL || driftFR || driftRL || driftRR;
 
 		bool doBraking = false;
 		doBraking = (Input.GetAxis ("Vertical") < -0.1 && drivingDirection == 1) || (Input.GetAxis ("Vertical") > 0.1 && drivingDirection == -1);
