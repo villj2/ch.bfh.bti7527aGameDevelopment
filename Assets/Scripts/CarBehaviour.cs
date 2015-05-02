@@ -129,16 +129,16 @@ public class CarBehaviour : MonoBehaviour {
 		bool driftRL = false;
 		bool driftRR = false;
 		if (wheelFL.GetGroundHit (out hit)) {
-			driftFL = Mathf.Abs(hit.sidewaysSlip) > 0.2f;
+			driftFL = Mathf.Abs(hit.sidewaysSlip) > 0.4f;
 		}
 		if (wheelFR.GetGroundHit (out hit)) {
-			driftFR = Mathf.Abs(hit.sidewaysSlip) > 0.2f;
+			driftFR = Mathf.Abs(hit.sidewaysSlip) > 0.4f;
 		}
 		if (wheelRL.GetGroundHit (out hit)) {
-			driftRL = Mathf.Abs(hit.sidewaysSlip) > 0.2f;
+			driftRL = Mathf.Abs(hit.sidewaysSlip) > 0.4f;
 		}
 		if (wheelRR.GetGroundHit (out hit)) {
-			driftRR = Mathf.Abs(hit.sidewaysSlip) > 0.2f;
+			driftRR = Mathf.Abs(hit.sidewaysSlip) > 0.4f;
 		}
 		IsDrifting = driftFL || driftFR || driftRL || driftRR;
 
