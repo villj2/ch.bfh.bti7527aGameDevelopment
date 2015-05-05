@@ -46,7 +46,7 @@ public class CarBehaviour : MonoBehaviour {
 	public float 			maxTorque = 20000f; //500f; //20000f
 	public float			normalBrake = 30000f;
 	public float			fullBrake = 40000f;
-	public GUIText 			guiSpeed;
+	private GUIText 		guiSpeed;
 	public Texture2D        guiSpeedDisplay;
 	public Texture2D        guiSpeedPointer;
 	public Transform		centerOfMass;
@@ -76,6 +76,8 @@ public class CarBehaviour : MonoBehaviour {
 
 		_dustL = GameObject.Find ("DustL").GetComponent<ParticleSystem> ();
 		_dustR = GameObject.Find ("DustR").GetComponent<ParticleSystem> ();
+
+		guiSpeed = GameObject.Find ("GUISpeed").GetComponent<GUIText>();
 
 		_audioSourceBrake = (AudioSource)gameObject.AddComponent<AudioSource>();
 		_audioSourceBrake.clip = audioClipBrake;

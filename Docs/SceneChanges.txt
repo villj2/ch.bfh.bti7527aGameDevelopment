@@ -1,0 +1,10 @@
+MENU:
+- Added SettingsContainer (Empty GameObject) to root
+- Added Scripts NetworkBehaviour and SettingsBehaviour to SettingsContainer
+
+
+
+SCENE1:
+- Disabled COSWORTH
+- Disabled Scripts StartCountdown and GUIBehavior on ScriptContainer
+- Disabled GUI/GUITime and GUI/GUICountdown
