@@ -16,8 +16,8 @@ public class MenuBehaviour : MonoBehaviour {
 		Debug.Log ("Menu behaviour load");
 
 		// FIXME verursacht falsche target position
-		//Prefs.Load ();
-		//Prefs.SetWheelColliderSuspension (ref WheelColliderFL, ref WheelColliderFR, ref WheelColliderRL, ref WheelColliderRR);
+		Prefs.Load ();
+		Prefs.SetWheelColliderSuspension (ref WheelColliderFL, ref WheelColliderFR, ref WheelColliderRL, ref WheelColliderRR);
 	}
 	
 	// Update is called once per frame

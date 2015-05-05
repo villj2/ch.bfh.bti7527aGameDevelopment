@@ -43,7 +43,7 @@ public class CarBehaviour : MonoBehaviour {
 	public WheelCollider 	wheelFR;
 	public WheelCollider 	wheelRL;
 	public WheelCollider 	wheelRR;
-	public float 			maxTorque = 20000f; //500f;
+	public float 			maxTorque = 20000f; //500f; //20000f
 	public float			normalBrake = 30000f;
 	public float			fullBrake = 40000f;
 	public GUIText 			guiSpeed;
@@ -129,16 +129,16 @@ public class CarBehaviour : MonoBehaviour {
 		bool driftRL = false;
 		bool driftRR = false;
 		if (wheelFL.GetGroundHit (out hit)) {
-			driftFL = Mathf.Abs(hit.sidewaysSlip) > 0.2f;
+			driftFL = Mathf.Abs(hit.sidewaysSlip) > 0.3f;
 		}
 		if (wheelFR.GetGroundHit (out hit)) {
-			driftFR = Mathf.Abs(hit.sidewaysSlip) > 0.2f;
+			driftFR = Mathf.Abs(hit.sidewaysSlip) > 0.3f;
 		}
 		if (wheelRL.GetGroundHit (out hit)) {
-			driftRL = Mathf.Abs(hit.sidewaysSlip) > 0.2f;
+			driftRL = Mathf.Abs(hit.sidewaysSlip) > 0.3f;
 		}
 		if (wheelRR.GetGroundHit (out hit)) {
-			driftRR = Mathf.Abs(hit.sidewaysSlip) > 0.2f;
+			driftRR = Mathf.Abs(hit.sidewaysSlip) > 0.3f;
 		}
 		IsDrifting = driftFL || driftFR || driftRL || driftRR;
 
@@ -173,13 +173,13 @@ public class CarBehaviour : MonoBehaviour {
 			}
 
 			wheelFL.forwardFriction = _frictionTmp;
-			wheelFL.sidewaysFriction = _frictionTmp;
+			//wheelFL.sidewaysFriction = _frictionTmp;
 			wheelFR.forwardFriction = _frictionTmp;
-			wheelFR.sidewaysFriction = _frictionTmp;
+			//wheelFR.sidewaysFriction = _frictionTmp;
 			wheelRL.forwardFriction = _frictionTmp;
-			wheelRL.sidewaysFriction = _frictionTmp;
+			//wheelRL.sidewaysFriction = _frictionTmp;
 			wheelRR.forwardFriction = _frictionTmp;
-			wheelRR.sidewaysFriction = _frictionTmp;
+			//wheelRR.sidewaysFriction = _frictionTmp;
 
 			wheelFL.motorTorque = 0;
 			wheelFR.motorTorque = 0;
