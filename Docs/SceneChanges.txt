@@ -8,3 +8,8 @@ SCENE1:
 - Disabled COSWORTH
 - Disabled Scripts StartCountdown and GUIBehavior on ScriptContainer
 - Disabled GUI/GUITime and GUI/GUICountdown
+
+
+PREFAB_COSWORTH:
+- Added Script PlayerNetworkBehaviour
+- Added NetworkView and defined PlayerNetworkBehaviour as Observed (drag n' drop)
