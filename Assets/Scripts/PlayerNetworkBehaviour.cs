@@ -15,6 +15,8 @@ public class PlayerNetworkBehaviour : MonoBehaviour {
 	{ 
 		if (Application.loadedLevel == 1 && !GetComponent<NetworkView> ().isMine) {
 			SyncedMovement ();
+			GetComponent<CarBehaviour>().enabled = false;
+			GetComponent<Rigidbody> ().transform.Find("Turret").GetComponent<TurretBehavioiur>().enabled = false;
 		}
 	}
 
