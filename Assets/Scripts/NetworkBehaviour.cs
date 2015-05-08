@@ -7,7 +7,7 @@ public class NetworkBehaviour : MonoBehaviour
 	private const string gameName = "Game1";
 	private HostData[] hostList;
 	public GameObject CarPrefab;
-	private int hostId;
+	private int hostId = -1;
 
 	private SettingsBehaviour settings;
 
@@ -66,7 +66,7 @@ public class NetworkBehaviour : MonoBehaviour
 		if (level == 1) {
 			if (Network.isServer) {
 				SpawnPlayer();
-			} else if (!Network.isClient && hostId != null) {
+			} else if (!Network.isClient && hostId > -1) {
 				Network.Connect(hostList[hostId]);
 			}
 		}

@@ -20,7 +20,7 @@ public class TurretBehavioiur : MonoBehaviour {
 
 	private void LaunchMissile()
 	{
-		GameObject missile = (GameObject)Instantiate(Resources.Load("PrefabMissile"));
+		GameObject missile = (GameObject)Network.Instantiate(Resources.Load("PrefabMissile"),  Vector3.zero, Quaternion.identity, 0);
 		missile.GetComponent<MissileBehaviour> ().Launch (transform);
 	}
 }
