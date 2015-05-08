@@ -7,6 +7,7 @@ public class NetworkBehaviour : MonoBehaviour
 	private const string gameName = "Game1";
 	private HostData[] hostList;
 	public GameObject CarPrefab;
+	private int hostId;
 
 	private SettingsBehaviour settings;
 
@@ -21,7 +22,7 @@ public class NetworkBehaviour : MonoBehaviour
 	
 	void OnServerInitialized()
 	{   
-		SpawnPlayer();
+		StartGame();
 	}
 	
 	void OnGUI()
@@ -34,8 +35,12 @@ public class NetworkBehaviour : MonoBehaviour
 			
 			if (hostList != null)
 			{   for (int i = 0; i < hostList.Length; i++)
-				{   if (GUILayout.Button(hostList[i].gameName))
-					Network.Connect(hostList[i]);
+				{   if (GUILayout.Button(hostList[i].gameName)) {
+						// do not connect now because level needs to be loaded first or server will send to wrong level
+						hostId = i;
+						StartGame();
+					}
+
 				}
 			}
 		}
@@ -48,10 +53,10 @@ public class NetworkBehaviour : MonoBehaviour
 	
 	void OnConnectedToServer()
 	{   
-		SpawnPlayer();
+		SpawnPlayer ();
 	}
 	
-	private void SpawnPlayer()
+	private void StartGame()
 	{   
 		Application.LoadLevel (1);
 
@@ -59,8 +64,16 @@ public class NetworkBehaviour : MonoBehaviour
 
 	void OnLevelWasLoaded (int level) {
 		if (level == 1) {
-			settings.Car = (GameObject) Network.Instantiate(CarPrefab, new Vector3(85f,20f,12f), Quaternion.identity, 0);
+			if (Network.isServer) {
+				SpawnPlayer();
+			} else if (!Network.isClient && hostId != null) {
+				Network.Connect(hostList[hostId]);
+			}
 		}
+	}
+
+	private void SpawnPlayer() {
+		settings.Car = (GameObject) Network.Instantiate(CarPrefab, new Vector3(85f,20f,12f), Quaternion.identity, 0);
 	}
 	
 }
