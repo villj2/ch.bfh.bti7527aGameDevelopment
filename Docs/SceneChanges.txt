@@ -21,3 +21,4 @@ PREFAB_MISSILE:
 
 TODO:
 - Move MissileBehaviour into Script directory
+- Destroy explosion game object after explosion has terminated

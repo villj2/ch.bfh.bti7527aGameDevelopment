@@ -6,6 +6,8 @@ using System.Collections;
  */
 public class BasicNetworkBehaviour : MonoBehaviour {
 
+	protected Rigidbody rigidbody;
+
 	private float _syncTimeLast = 0f;
 	private float _syncDelay = 0f;
 	private float _syncTime = 0f;
@@ -14,50 +16,63 @@ public class BasicNetworkBehaviour : MonoBehaviour {
 	private Quaternion _syncRotationStart = Quaternion.identity;
 	private Quaternion _syncRotationEnd = Quaternion.identity;
 
+	void Start() {
+		rigidbody = GetComponent<Rigidbody> ();
+	}
+
 	void Update()
 	{ 
 		if (Application.loadedLevel == 1 && !GetComponent<NetworkView> ().isMine) {
-			SyncedMovement ();
+			_syncTime += Time.deltaTime;
+			SyncedMovement (_syncTime / _syncDelay);
 			OnOpponentUpdate();
 		}
 	}
 
-	protected virtual void OnOpponentUpdate() {
-	}
-	
 	void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info)
 	{
-		Rigidbody rb = GetComponent<Rigidbody> ();
-		// Outgoing sync
-		Vector3 syncPos = Vector3.zero;
-		Quaternion syncRotation = Quaternion.identity;
+		// return early if the rigidbody has not been set
+		if (!rigidbody) {
+			return;
+		}
+
 		if (stream.isWriting)
 		{
-			syncPos = rb.position;
-			syncRotation = rb.rotation;
-			stream.Serialize(ref syncPos);
-			stream.Serialize(ref syncRotation);
+			OnOutgonigSync(stream, info);
 		}
-		else // Incomming sync
+		else
 		{
-			stream.Serialize(ref syncPos);
-			stream.Serialize(ref syncRotation);
-			_syncTime = 0f;
-			_syncDelay = Time.time - _syncTimeLast;
-			_syncTimeLast = Time.time;
-			_syncPosStart = rb.position;
-			_syncPosEnd = syncPos;
-			_syncRotationStart = rb.rotation;
-			_syncRotationEnd = syncRotation;
+			OnIncomingSync(stream, info);
 		}
 	}
 	
-	private void SyncedMovement()
+	protected virtual void SyncedMovement(float duration)
 	{ 
-		_syncTime += Time.deltaTime;
-		Rigidbody rb = GetComponent<Rigidbody> ();
-		float t = _syncTime / _syncDelay;
-		rb.position = Vector3.Lerp(_syncPosStart, _syncPosEnd, t);
-		rb.rotation = Quaternion.Lerp (_syncRotationStart, _syncRotationEnd, t);
+		rigidbody.position = Vector3.Lerp(_syncPosStart, _syncPosEnd, duration);
+		rigidbody.rotation = Quaternion.Lerp (_syncRotationStart, _syncRotationEnd, duration);
+	}
+
+	protected virtual void OnOpponentUpdate() {
+	}
+
+	protected virtual void OnOutgonigSync(BitStream stream, NetworkMessageInfo info) {
+		Vector3 syncPos = rigidbody.position;
+		Quaternion syncRotation = rigidbody.rotation;
+		stream.Serialize(ref syncPos);
+		stream.Serialize(ref syncRotation);
+	}
+
+	protected virtual void OnIncomingSync(BitStream stream, NetworkMessageInfo info) {
+		Vector3 syncPos = Vector3.zero;
+		Quaternion syncRotation = Quaternion.identity;
+		stream.Serialize(ref syncPos);
+		stream.Serialize(ref syncRotation);
+		_syncTime = 0f;
+		_syncDelay = Time.time - _syncTimeLast;
+		_syncTimeLast = Time.time;
+		_syncPosStart = rigidbody.position;
+		_syncPosEnd = syncPos;
+		_syncRotationStart = rigidbody.rotation;
+		_syncRotationEnd = syncRotation;
 	}
 }
