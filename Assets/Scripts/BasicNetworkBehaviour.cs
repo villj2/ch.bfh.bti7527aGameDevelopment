@@ -6,8 +6,10 @@ using System.Collections;
  */
 public class BasicNetworkBehaviour : MonoBehaviour {
 
+	protected bool isInitialized = false;
 	protected Rigidbody rigidbody;
 
+	private bool isOpponent;
 	private float _syncTimeLast = 0f;
 	private float _syncDelay = 0f;
 	private float _syncTime = 0f;
@@ -17,12 +19,17 @@ public class BasicNetworkBehaviour : MonoBehaviour {
 	private Quaternion _syncRotationEnd = Quaternion.identity;
 
 	void Start() {
-		rigidbody = GetComponent<Rigidbody> ();
+		isOpponent = !GetComponent<NetworkView> ().isMine;
+		initialize ();
+		if (isOpponent) {
+			initializeOpponent();
+		}
+		isInitialized = true;
 	}
 
 	void Update()
 	{ 
-		if (Application.loadedLevel == 1 && !GetComponent<NetworkView> ().isMine) {
+		if (Application.loadedLevel == 1 && isOpponent) {
 			_syncTime += Time.deltaTime;
 			SyncedMovement (_syncTime / _syncDelay);
 			OnOpponentUpdate();
@@ -31,8 +38,8 @@ public class BasicNetworkBehaviour : MonoBehaviour {
 
 	void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info)
 	{
-		// return early if the rigidbody has not been set
-		if (!rigidbody) {
+		// return early if not initialized
+		if (!isInitialized) {
 			return;
 		}
 
@@ -44,6 +51,13 @@ public class BasicNetworkBehaviour : MonoBehaviour {
 		{
 			OnIncomingSync(stream, info);
 		}
+	}
+
+	protected virtual void initialize() {
+		rigidbody = GetComponent<Rigidbody> ();
+	}
+
+	protected virtual void initializeOpponent() {
 	}
 	
 	protected virtual void SyncedMovement(float duration)
