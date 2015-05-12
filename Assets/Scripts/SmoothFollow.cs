@@ -2,15 +2,28 @@
 using System.Collections;
 
 public class SmoothFollow : MonoBehaviour {
-	public Transform target;            // The target we are following
+	private Transform target;            // The target we are following
 	public float distance = 10.0f;      // The distance in x-z plane to the target
 	public float height = 2.0f;         // the height of the camera above the target
 	public float heightDamping = 2.0f;  // How much we damp in height 
 	public float rotationDamping= 1.0f; // How much we damp in rotation 
+
+	private SettingsBehaviour settings;
+	
+	void Start () {
+		settings = GameObject.Find("SettingsContainer").GetComponent<SettingsBehaviour> ();
+	}
 	
 	void LateUpdate () {
-		// Early out if we don't have a target
-		if (!target) return;
+		// Init target
+		if (!target) {
+			if (settings.Car) {
+				target = settings.Car.transform;
+			} else {
+				// Early out if we don't have a target
+				return;
+			}
+		}
 		
 		// Calculate the current rotation angles
 		float wantedRotationAngle = target.eulerAngles.y;

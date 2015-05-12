@@ -1,0 +1,24 @@
+MENU:
+- Added SettingsContainer (Empty GameObject) to root
+- Added Scripts NetworkBehaviour and SettingsBehaviour to SettingsContainer
+
+
+SCENE1:
+- Disabled COSWORTH
+- Disabled Scripts StartCountdown and GUIBehavior on ScriptContainer
+- Disabled GUI/GUITime and GUI/GUICountdown
+
+
+PREFAB_COSWORTH:
+- Added Script PlayerNetworkBehaviour
+- Added NetworkView and defined PlayerNetworkBehaviour as Observed (drag n' drop)
+
+
+PREFAB_MISSILE:
+- Added Script MissileNetworkBehaviour
+- Added NetworkView and defined MissileNetworkBehaviour as Observed (drag n' drop)
+
+
+TODO:
+- Move MissileBehaviour into Script directory
+- Destroy explosion game object after explosion has terminated
