@@ -12,6 +12,8 @@ public class Prefs : MonoBehaviour {
 	public static float suspensionSpring;
 	public static float suspensionDamper;
 
+	public static Texture2D crosshair;
+
 	public static void Load()
 	{
 		Debug.Log ("Load");
@@ -26,6 +28,10 @@ public class Prefs : MonoBehaviour {
 		suspensionDistance = 0.2f;
 		suspensionSpring = 35000f;
 		suspensionDamper = 4500f;
+
+		string c = PlayerPrefs.GetString ("crosshair");
+
+		//crosshair = Resources.Load (System.IO.Path.Combine ("crosshairs", c), typeof(Texture));
 	}
 
 	public static void Save()
@@ -37,6 +43,8 @@ public class Prefs : MonoBehaviour {
 		PlayerPrefs.SetFloat ("suspensionDistance", suspensionDistance);
 		PlayerPrefs.SetFloat ("suspensionSpring", suspensionSpring);
 		PlayerPrefs.SetFloat ("suspensionDamper", suspensionDamper);
+
+//		PlayerPrefs.SetString ("crosshair", crosshair.name);
 	}
 
 	public static void SetBodyMaterial(ref Material bodyMat)

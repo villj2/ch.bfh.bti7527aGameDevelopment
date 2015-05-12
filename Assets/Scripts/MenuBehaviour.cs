@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class MenuBehaviour : MonoBehaviour {
@@ -9,6 +10,20 @@ public class MenuBehaviour : MonoBehaviour {
 	public WheelCollider WheelColliderFR;
 	public WheelCollider WheelColliderRL;
 	public WheelCollider WheelColliderRR;
+
+	public Sprite CH1;
+	public Sprite CH2;
+	public Sprite CH3;
+	public Sprite CH4;
+	public Sprite CH5;
+	public Sprite CH6;
+	public Sprite CH7;
+	public Sprite CH8;
+	public Sprite CH9;
+	public Sprite CH10;
+	public Sprite CH11;
+
+
 
 	// Use this for initialization
 	void Start ()
@@ -77,6 +92,26 @@ public class MenuBehaviour : MonoBehaviour {
 
 	void OnApplicationQuit()
 	{
+		Prefs.Save ();
+	}
+
+	public void OnSliderCrosshairChange(float val)
+	{
+		//Prefs.crosshair = val;
+		Debug.Log (string.Format (" crosshair slider {0}", val));
+		Image img;
+
+		img = GameObject.FindObjectOfType<Image>();
+
+		int a = (int)( val*100);
+		Debug.Log (string.Format (" crosshair slider {0}", a));
+			//img =Resources
+		img.sprite = CH4;
+
+
+			
+
+
 		Prefs.Save ();
 	}
 }
