@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MissileBehaviour : MonoBehaviour {
 
@@ -21,8 +22,14 @@ public class MissileBehaviour : MonoBehaviour {
 	private AudioSource	_audioSourceExplosion2;
 	private AudioSource	_audioSourceExplosion3;
 
+	private Dictionary<string, int> _points;
+	private GUIText _guiPoints;
+
 	// Use this for initialization
 	void Start () {
+
+		_points = GameObject.Find ("SettingsContainer").GetComponent<SettingsBehaviour> ().Points;
+		_guiPoints = GameObject.Find ("GUIPoints").GetComponent<GUIText> ();
 		
 		//_audioSourceExplosion = (AudioSource)gameObject.GetComponent<AudioSource> ();
 
@@ -91,10 +98,45 @@ public class MissileBehaviour : MonoBehaviour {
 			break;
 		}
 
+		GameObject[] cars = GameObject.FindGameObjectsWithTag("PlayerCar");
+		
+		foreach (GameObject car in cars) {
+			float distanceToCar = Vector3.Distance (this.gameObject.transform.position, car.gameObject.transform.position);
+			bool isOpponent = !car.GetComponent<NetworkView> ().isMine;
+
+			//if(true)
+			if(isOpponent)
+			{
+				int pointsGathered = Mathf.Max((int)(-100 / 12 * distanceToCar + 100), 0);
+
+				// check if key exists
+				int item;
+				_points.TryGetValue(Network.player.ipAddress, out item);
+				if(item == 0)_points[Network.player.ipAddress] = 0;
+
+				// add points
+				_points[Network.player.ipAddress] += pointsGathered;
+
+				// loop through all keys (all players)
+				string displayPoints = string.Empty;
+				var keys = _points.Keys;
+				foreach (string key in keys) {
+					displayPoints += key + ": " + _points[key] + "\n";
+				}
+
+				// display points
+				//_guiPoints.text = _points[Network.player.ipAddress] + " Points";
+				_guiPoints.text = displayPoints;
+
+				// TODO sync Points-Dictionary
+			}
+		}
+
 		GetComponentInChildren<MeshRenderer> ().enabled = false;
 
 		yield return new WaitForSeconds(4);
 
+		Destroy (explosion);
 		Destroy (this.gameObject);
 	}
 }
