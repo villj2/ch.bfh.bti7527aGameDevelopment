@@ -14,14 +14,5 @@ public class SettingsBehaviour : MonoBehaviour {
 
 		// Player points
 		Points = new Dictionary<string, int>();
-		Points ["test"] = 33;
-	}
-
-	void Update()
-	{
-		/*var keys = Points.Keys;
-		foreach (string key in keys) {
-			Debug.Log (Points[key]);
-		}*/
 	}
 }

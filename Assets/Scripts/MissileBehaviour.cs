@@ -4,13 +4,6 @@ using System.Collections.Generic;
 
 public class MissileBehaviour : MonoBehaviour {
 
-	// TODO
-	/*
-	 * 1) Detonate (particle effect) after x seconds
-	 * 2) Explosion -> Force to Car
-	 * 
-	 * */
-
 	public float LaunchForce = 0;
 	public AudioClip AudioClipLaunch;
 	public AudioClip AudioClipExplosion1;
@@ -98,37 +91,41 @@ public class MissileBehaviour : MonoBehaviour {
 			break;
 		}
 
-		GameObject[] cars = GameObject.FindGameObjectsWithTag("PlayerCar");
-		
-		foreach (GameObject car in cars) {
-			float distanceToCar = Vector3.Distance (this.gameObject.transform.position, car.gameObject.transform.position);
-			bool isOpponent = !car.GetComponent<NetworkView> ().isMine;
-
-			//if(true)
-			if(isOpponent)
-			{
-				int pointsGathered = Mathf.Max((int)(-100 / 12 * distanceToCar + 100), 0);
-
-				// check if key exists
-				int item;
-				_points.TryGetValue(Network.player.ipAddress, out item);
-				if(item == 0)_points[Network.player.ipAddress] = 0;
-
-				// add points
-				_points[Network.player.ipAddress] += pointsGathered;
-
-				// loop through all keys (all players)
-				string displayPoints = string.Empty;
-				var keys = _points.Keys;
-				foreach (string key in keys) {
-					displayPoints += key + ": " + _points[key] + "\n";
+		// make sure only own missiles gather points
+		if (GetComponent<NetworkView> ().isMine) 
+		{
+			GameObject[] cars = GameObject.FindGameObjectsWithTag("PlayerCar");
+			
+			foreach (GameObject car in cars) {
+				float distanceToCar = Vector3.Distance (this.gameObject.transform.position, car.gameObject.transform.position);
+				bool isOpponent = !car.GetComponent<NetworkView> ().isMine;
+				
+				//if(true)
+				if(isOpponent)
+				{
+					int pointsGathered = Mathf.Max((int)(-100 / 12 * distanceToCar + 100), 0);
+					
+					// check if key exists
+					int item;
+					_points.TryGetValue(Network.player.ipAddress, out item);
+					if(item == 0)_points[Network.player.ipAddress] = 0;
+					
+					// add points
+					_points[Network.player.ipAddress] += pointsGathered;
+					
+					// loop through all keys (all players)
+					string displayPoints = string.Empty;
+					var keys = _points.Keys;
+					foreach (string key in keys) {
+						displayPoints += key + ": " + _points[key] + "\n";
+					}
+					
+					// display points
+					//_guiPoints.text = _points[Network.player.ipAddress] + " Points";
+					_guiPoints.text = displayPoints;
+					
+					// TODO sync Points-Dictionary
 				}
-
-				// display points
-				//_guiPoints.text = _points[Network.player.ipAddress] + " Points";
-				_guiPoints.text = displayPoints;
-
-				// TODO sync Points-Dictionary
 			}
 		}
 
