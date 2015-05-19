@@ -308,9 +308,9 @@ public class CarBehaviour : MonoBehaviour {
 
 	void SetWheelColliderSuspension ()
 	{
-		Debug.Log (PlayerPrefs.GetFloat ("suspensionDistance", 0.2f));
-		Debug.Log (PlayerPrefs.GetFloat ("suspensionSpring", 35000f));
-		Debug.Log (PlayerPrefs.GetFloat ("suspensionDamper", 4500f));
+		//Debug.Log (PlayerPrefs.GetFloat ("suspensionDistance", 0.2f));
+		//Debug.Log (PlayerPrefs.GetFloat ("suspensionSpring", 35000f));
+		//Debug.Log (PlayerPrefs.GetFloat ("suspensionDamper", 4500f));
 
 		Prefs.suspensionDistance = PlayerPrefs.GetFloat ("suspensionDistance", 0.2f);
 		Prefs.suspensionSpring = PlayerPrefs.GetFloat ("suspensionSpring", 35000f);

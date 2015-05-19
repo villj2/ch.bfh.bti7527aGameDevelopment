@@ -38,7 +38,7 @@ public class MenuBehaviour : MonoBehaviour {
 
 
 		
-		_myCHImage = GameObject.Find("Image_CH").GetComponent<Image>();
+		//_myCHImage = GameObject.Find("Image_CH").GetComponent<Image>();
 		//_myCHImage.sprite = CH1;
 
 	}
