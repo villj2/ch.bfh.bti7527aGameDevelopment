@@ -38,8 +38,8 @@ public class MenuBehaviour : MonoBehaviour {
 
 
 		
-		//_myCHImage = GameObject.Find("Image_CH").GetComponent<Image>();
-		//_myCHImage.sprite = CH1;
+		_myCHImage = GameObject.Find("Image_CH").GetComponent<Image>();
+		_myCHImage.sprite = CH1;
 
 	}
 	
@@ -133,8 +133,8 @@ public class MenuBehaviour : MonoBehaviour {
 		if (a >= 90 )
 			_myCHImage.sprite = CH10;
 
+		GameObject.Find ("SettingsContainer").GetComponent<SettingsBehaviour> ().crossHair = _myCHImage.sprite;
 
 
-		Prefs.Save ();
 	}
 }
