@@ -8,6 +8,8 @@ public class SettingsBehaviour : MonoBehaviour {
 
 	public Dictionary<string, int> Points { get; set; }
 
+	public Sprite crossHair { get; set; }
+
 	void Start () {
 		// Persist object
 		Object.DontDestroyOnLoad (gameObject);
