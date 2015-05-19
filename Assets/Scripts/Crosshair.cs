@@ -33,9 +33,9 @@ public class Crosshair : MonoBehaviour {
 //	
 	}
 	void OnGUI() {
-		float xMin = Screen.width - (Screen.width - Input.mousePosition.x) - (myCrosshair.width / 2);
-		float yMin = (Screen.height - Input.mousePosition.y) - (myCrosshair.height / 2);
-		GUI.DrawTexture(new Rect(xMin, yMin, myCrosshair.width, myCrosshair.height), myCrosshair);
+		float xMin = Screen.width - (Screen.width - Input.mousePosition.x) - (myCrosshair.width / 4);
+		float yMin = (Screen.height - Input.mousePosition.y) - (myCrosshair.height / 4);
+		GUI.DrawTexture(new Rect(xMin, yMin, myCrosshair.width/2, myCrosshair.height/2), myCrosshair);
 
 
 	}

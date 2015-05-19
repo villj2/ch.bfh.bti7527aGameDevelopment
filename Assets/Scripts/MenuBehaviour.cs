@@ -23,6 +23,8 @@ public class MenuBehaviour : MonoBehaviour {
 	public Sprite CH10;
 	public Sprite CH11;
 
+	private Image _myCHImage;
+
 
 
 	// Use this for initialization
@@ -33,6 +35,12 @@ public class MenuBehaviour : MonoBehaviour {
 		// FIXME verursacht falsche target position
 		Prefs.Load ();
 		Prefs.SetWheelColliderSuspension (ref WheelColliderFL, ref WheelColliderFR, ref WheelColliderRL, ref WheelColliderRR);
+
+
+		
+		_myCHImage = GameObject.Find("Image_CH").GetComponent<Image>();
+		//_myCHImage.sprite = CH1;
+
 	}
 	
 	// Update is called once per frame
@@ -99,17 +107,32 @@ public class MenuBehaviour : MonoBehaviour {
 	{
 		//Prefs.crosshair = val;
 		Debug.Log (string.Format (" crosshair slider {0}", val));
-		Image img;
-
-		img = GameObject.FindObjectOfType<Image>();
 
 		int a = (int)( val*100);
 		Debug.Log (string.Format (" crosshair slider {0}", a));
-			//img =Resources
-		img.sprite = CH4;
 
 
-			
+		if (a >= 0 && a < 10)
+			_myCHImage.sprite = CH1;
+		if (a >= 10 && a < 20)
+			_myCHImage.sprite = CH2;
+		if (a >= 20 && a < 30)
+			_myCHImage.sprite = CH3;
+		if (a >= 30 && a < 40)
+			_myCHImage.sprite = CH4;
+		if (a >= 40 && a < 50)
+			_myCHImage.sprite = CH5;
+		if (a >= 50 && a < 60)
+			_myCHImage.sprite = CH6;
+		if (a >= 60 && a < 70)
+			_myCHImage.sprite = CH7;
+		if (a >= 70 && a < 80)
+			_myCHImage.sprite = CH8;
+		if (a >= 80 && a < 90)
+			_myCHImage.sprite = CH9;
+		if (a >= 90 )
+			_myCHImage.sprite = CH10;
+
 
 
 		Prefs.Save ();
