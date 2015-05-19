@@ -17,12 +17,14 @@ public class MissileBehaviour : MonoBehaviour {
 
 	private Dictionary<string, int> _points;
 	private GUIText _guiPoints;
+	private NetworkView _networkView;
 
 	// Use this for initialization
 	void Start () {
 
 		_points = GameObject.Find ("SettingsContainer").GetComponent<SettingsBehaviour> ().Points;
 		_guiPoints = GameObject.Find ("GUIPoints").GetComponent<GUIText> ();
+		_networkView = GetComponent<NetworkView> ();
 		
 		//_audioSourceExplosion = (AudioSource)gameObject.GetComponent<AudioSource> ();
 
@@ -113,18 +115,10 @@ public class MissileBehaviour : MonoBehaviour {
 					// add points
 					_points[Network.player.ipAddress] += pointsGathered;
 					
-					// loop through all keys (all players)
-					string displayPoints = string.Empty;
-					var keys = _points.Keys;
-					foreach (string key in keys) {
-						displayPoints += key + ": " + _points[key] + "\n";
-					}
+					DisplayPoints();
 					
-					// display points
-					//_guiPoints.text = _points[Network.player.ipAddress] + " Points";
-					_guiPoints.text = displayPoints;
-					
-					// TODO sync Points-Dictionary
+					// sync Points-Dictionary
+					_networkView.RPC("SharePoints", RPCMode.AllBuffered, Network.AllocateViewID(), Network.player.ipAddress, _points[Network.player.ipAddress]);
 				}
 			}
 		}
@@ -135,5 +129,25 @@ public class MissileBehaviour : MonoBehaviour {
 
 		Destroy (explosion);
 		Destroy (this.gameObject);
+	}
+
+	private void DisplayPoints()
+	{
+		// loop through all keys (all players)
+		string displayPoints = string.Empty;
+		var keys = _points.Keys;
+		foreach (string key in keys) {
+			displayPoints += key + ": " + _points[key] + "\n";
+		}
+		
+		// display points
+		//_guiPoints.text = _points[Network.player.ipAddress] + " Points";
+		_guiPoints.text = displayPoints;
+	}
+
+	[RPC] void SharePoints(NetworkViewID viewID, string playerId, int points)
+	{
+		_points[playerId] = _points;
+		DisplayPoints();
 	}
 }
