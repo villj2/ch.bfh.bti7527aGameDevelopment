@@ -3,19 +3,21 @@ using System.Collections;
 
 public class Crosshair : MonoBehaviour {
 
-	public Texture2D myCrosshair;
 	private Vector2 myPosition;
-
-
+	private Sprite myCrosshair;
 
 	// Use this for initialization
 	void Start () {
-		Cursor.SetCursor (myCrosshair, Vector2.zero, CursorMode.Auto);
 
 
+		myCrosshair = GameObject.Find ("SettingsContainer").GetComponent<SettingsBehaviour> ().crossHair;
+
+		Cursor.visible = false;
+		Cursor.lockState = CursorLockMode.None;
+		Cursor.SetCursor (myCrosshair.texture , Vector2.zero, CursorMode.Auto);
 
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 //		if (Input.GetKey (KeyCode.Escape)) {
@@ -33,9 +35,9 @@ public class Crosshair : MonoBehaviour {
 //	
 	}
 	void OnGUI() {
-		float xMin = Screen.width - (Screen.width - Input.mousePosition.x) - (myCrosshair.width / 4);
-		float yMin = (Screen.height - Input.mousePosition.y) - (myCrosshair.height / 4);
-		GUI.DrawTexture(new Rect(xMin, yMin, myCrosshair.width/2, myCrosshair.height/2), myCrosshair);
+		float xMin = Screen.width - (Screen.width - Input.mousePosition.x) - (myCrosshair.rect.width / 4);
+		float yMin = (Screen.height - Input.mousePosition.y) - (myCrosshair.rect.height / 4);
+		GUI.DrawTexture(new Rect(xMin, yMin, myCrosshair.rect.width/2, myCrosshair.rect.height/2), myCrosshair.texture );
 
 
 	}

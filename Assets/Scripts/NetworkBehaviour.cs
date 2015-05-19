@@ -26,22 +26,28 @@ public class NetworkBehaviour : MonoBehaviour
 	}
 	
 	void OnGUI()
-	{   if (!Network.isClient && !Network.isServer)
-		{   if (GUILayout.Button("Start Server"))
-			StartServer();
+	{   if (!Network.isClient && !Network.isServer) {
+			if (GUILayout.Button ("Start Server"))
+				StartServer ();
 			
-			if (GUILayout.Button("Refresh Hosts"))
-				MasterServer.RequestHostList(typeName);
+			if (GUILayout.Button ("Refresh Hosts"))
+				MasterServer.RequestHostList (typeName);
 			
-			if (hostList != null)
-			{   for (int i = 0; i < hostList.Length; i++)
-				{   if (GUILayout.Button(hostList[i].gameName)) {
+			if (hostList != null) {
+				for (int i = 0; i < hostList.Length; i++) {
+					if (GUILayout.Button (hostList [i].gameName)) {
 						// do not connect now because level needs to be loaded first or server will send to wrong level
 						hostId = i;
-						StartGame();
+						StartGame ();
 					}
 
 				}
+			}
+		} else {
+			if (GUILayout.Button("Disconnect"))
+			{
+				Network.Disconnect(200);
+				Application.LoadLevel (0);
 			}
 		}
 	}
@@ -74,6 +80,17 @@ public class NetworkBehaviour : MonoBehaviour
 
 	private void SpawnPlayer() {
 		settings.Car = (GameObject) Network.Instantiate(CarPrefab, new Vector3(85f,20f,12f), Quaternion.identity, 0);
+	}
+
+	void OnPlayerDisconnected (NetworkPlayer player)
+	{
+		// Removing player from network and scene
+		Network.RemoveRPCs(player, 0);
+		Network.DestroyPlayerObjects(player);
+	}
+
+	void OnApplicationQuit() {
+		OnPlayerDisconnected (Network.player);
 	}
 	
 }
