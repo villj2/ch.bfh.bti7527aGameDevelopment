@@ -128,7 +128,7 @@ public class MissileBehaviour : MonoBehaviour {
 		yield return new WaitForSeconds(4);
 
 		Destroy (explosion);
-		Destroy (this.gameObject);
+		Network.Destroy (this.gameObject);
 	}
 
 	private void DisplayPoints()
