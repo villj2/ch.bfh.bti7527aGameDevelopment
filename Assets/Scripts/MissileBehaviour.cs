@@ -147,7 +147,7 @@ public class MissileBehaviour : MonoBehaviour {
 
 	[RPC] void SharePoints(NetworkViewID viewID, string playerId, int points)
 	{
-		_points[playerId] = _points;
+		_points[playerId] = points;
 		DisplayPoints();
 	}
 }
