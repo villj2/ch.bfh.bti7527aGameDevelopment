@@ -75,5 +75,12 @@ public class NetworkBehaviour : MonoBehaviour
 	private void SpawnPlayer() {
 		settings.Car = (GameObject) Network.Instantiate(CarPrefab, new Vector3(85f,20f,12f), Quaternion.identity, 0);
 	}
+
+	void OnPlayerDisconnected (NetworkPlayer player)
+	{
+		// Removing player from network and scene
+		Network.RemoveRPCs(player, 0);
+		Network.DestroyPlayerObjects(player);
+	}
 	
 }
