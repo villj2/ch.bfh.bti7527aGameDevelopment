@@ -23,7 +23,9 @@ public class PlayerNetworkBehaviour : BasicNetworkBehaviour {
 	{
 		base.initializeOpponent ();
 		GetComponent<CarBehaviour>().enabled = false;
-		rigidbody.transform.Find("Turret").GetComponent<TurretBehavioiur>().enabled = false;
+		Transform turret = rigidbody.transform.Find("Turret");
+		turret.GetComponent<TurretBehavioiur>().enabled = false;
+		turret.GetComponent<UnityStandardAssets.Utility.SimpleMouseRotator> ().enabled = false;
 		wfl.DisableWheelScript ();
 		wfr.DisableWheelScript ();
 		wrl.DisableWheelScript ();
