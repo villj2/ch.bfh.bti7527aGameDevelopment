@@ -4,7 +4,7 @@ using System.Collections;
 public class NetworkBehaviour : MonoBehaviour 
 {
 	private const string typeName = "ch.bfh.bti7527aGameDevelopment";
-	private const string gameName = "Game1";
+	private string gameName = "MyGame";
 	private HostData[] hostList;
 	public GameObject CarPrefab;
 	private int hostId = -1;
@@ -27,6 +27,8 @@ public class NetworkBehaviour : MonoBehaviour
 	
 	void OnGUI()
 	{   if (!Network.isClient && !Network.isServer) {
+			gameName = GUILayout.TextField(gameName, 25);
+
 			if (GUILayout.Button ("Start Server"))
 				StartServer ();
 			
@@ -71,10 +73,14 @@ public class NetworkBehaviour : MonoBehaviour
 	void OnLevelWasLoaded (int level) {
 		if (level == 1) {
 			if (Network.isServer) {
-				SpawnPlayer();
+				SpawnPlayer ();
 			} else if (!Network.isClient && hostId > -1) {
-				Network.Connect(hostList[hostId]);
+				Network.Connect (hostList [hostId]);
 			}
+		} else if (level == 0) {
+			// reset cursor 
+			Cursor.visible = true;
+			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
 		}
 	}
 
