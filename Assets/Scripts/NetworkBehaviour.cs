@@ -7,12 +7,17 @@ public class NetworkBehaviour : MonoBehaviour
 	private string gameName = "MyGame";
 	private HostData[] hostList;
 	public GameObject CarPrefab;
+	private NetworkView _networkView;
 	private int hostId = -1;
+	private Vector3[] spawnPoints;
 
 	private SettingsBehaviour settings;
 
 	void Start () {
+		_networkView = gameObject.AddComponent<NetworkView> ();
 		settings = gameObject.GetComponent<SettingsBehaviour> ();
+
+		spawnPoints = new Vector3[] {new Vector3 (85f, 20f, 12f), new Vector3 (96f, 20f, 317f), new Vector3 (368f, 24f, 449f)};
 	}
 	
 	private void StartServer()
@@ -61,7 +66,7 @@ public class NetworkBehaviour : MonoBehaviour
 	
 	void OnConnectedToServer()
 	{   
-		SpawnPlayer ();
+		_networkView.RPC("RequestSpawnPos", RPCMode.AllBuffered, Network.player);
 	}
 	
 	private void StartGame()
@@ -73,7 +78,7 @@ public class NetworkBehaviour : MonoBehaviour
 	void OnLevelWasLoaded (int level) {
 		if (level == 1) {
 			if (Network.isServer) {
-				SpawnPlayer ();
+				SpawnPlayer (0);
 			} else if (!Network.isClient && hostId > -1) {
 				Network.Connect (hostList [hostId]);
 			}
@@ -84,8 +89,8 @@ public class NetworkBehaviour : MonoBehaviour
 		}
 	}
 
-	private void SpawnPlayer() {
-		settings.Car = (GameObject) Network.Instantiate(CarPrefab, new Vector3(85f,20f,12f), Quaternion.identity, 0);
+	private void SpawnPlayer(int spawnIndex) {
+		settings.Car = (GameObject) Network.Instantiate(CarPrefab, spawnPoints[spawnIndex], Quaternion.identity, 0);
 	}
 
 	void OnPlayerDisconnected (NetworkPlayer player)
@@ -98,5 +103,25 @@ public class NetworkBehaviour : MonoBehaviour
 	void OnApplicationQuit() {
 		OnPlayerDisconnected (Network.player);
 	}
-	
+
+	[RPC] void RequestSpawnPos(NetworkPlayer player)
+	{
+		if (Network.isServer) {
+			NetworkPlayer p;
+			for (int i = 0; i < Network.connections.Length; i++) {
+				p = Network.connections[i];
+				if (p == player) {
+					_networkView.RPC("RespondSpawnPos", RPCMode.AllBuffered, (i+1) % 3, p);
+					break;
+				}
+			}
+		}
+	}
+
+	[RPC] void RespondSpawnPos(int spawnIndex, NetworkPlayer player)
+	{
+		if (Network.player == player) {
+			SpawnPlayer(spawnIndex);
+		}
+	}
 }
