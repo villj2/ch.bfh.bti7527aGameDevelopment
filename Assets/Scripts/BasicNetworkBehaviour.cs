@@ -62,19 +62,12 @@ public class BasicNetworkBehaviour : MonoBehaviour {
 	
 	protected virtual void SyncedMovement(float duration)
 	{ 
+		if (duration == 0) {
+			return;
+		}
+
 		rigidbody.position = Vector3.Lerp(_syncPosStart, _syncPosEnd, duration);
-
-		if(float.IsNaN(_syncRotationStart.x))
-		{
-			_syncRotationStart = Quaternion.identity;
-		}
-
-		if(float.IsNaN(_syncRotationEnd.x))
-		{
-			_syncRotationEnd = Quaternion.identity;
-		}
-
-		rigidbody.rotation = Quaternion.Lerp (_syncRotationStart, _syncRotationEnd, 1f);
+		rigidbody.rotation = Quaternion.Lerp (_syncRotationStart, _syncRotationEnd, duration);
 	}
 
 	protected virtual void OnOpponentUpdate() {
