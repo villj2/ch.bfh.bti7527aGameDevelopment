@@ -128,7 +128,11 @@ public class MissileBehaviour : MonoBehaviour {
 			
 			Destroy (explosion);
 			Network.Destroy (this.gameObject);
+			//Network.Destroy (this.GetComponent<NetworkView>().viewID);
+			Destroy (this);
 		}
+
+
 	}
 
 	private void DisplayPoints()
