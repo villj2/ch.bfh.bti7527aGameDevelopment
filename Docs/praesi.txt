@@ -1,0 +1,9 @@
+RocketShooter Präsi
+
+1) Game starten
+2) Game nacheinander Joinen mit Fülli Comments
+3) Fülli: Netzwerk Stuff erklären (Nur Fahrzeug bewegen)
+4) Inversini: Turret Shizzle erklären (Rakete nur ins Leere abfeuern)
+5) Julien: Rocket / Explosion / Punktesystem erklären (Rakete auf Auto abfeuern um Explosions-Force / Punktesystem aufzuzeigen)
+6) Game on!
+7) Zocken bis Zeit abläuft
