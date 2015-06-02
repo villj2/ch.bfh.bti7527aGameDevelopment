@@ -37,10 +37,12 @@ public class MenuBehaviour : MonoBehaviour {
 		Prefs.SetWheelColliderSuspension (ref WheelColliderFL, ref WheelColliderFR, ref WheelColliderRL, ref WheelColliderRR);
 
 
-		
-		_myCHImage = GameObject.Find("Image_CH").GetComponent<Image>();
-		_myCHImage.sprite = CH1;
-		OnSliderCrosshairChange (0.0f); //default val
+		if (GameObject.Find ("Image_CH") != null) {
+
+			_myCHImage = GameObject.Find ("Image_CH").GetComponent<Image> ();
+			_myCHImage.sprite = CH1;
+			OnSliderCrosshairChange (0.0f); //default val
+		}
 
 	}
 	
@@ -107,10 +109,10 @@ public class MenuBehaviour : MonoBehaviour {
 	public void OnSliderCrosshairChange(float val)
 	{
 		//Prefs.crosshair = val;
-		Debug.Log (string.Format (" crosshair slider {0}", val));
+		//Debug.Log (string.Format (" crosshair slider {0}", val));
 
 		int a = (int)( val*100);
-		Debug.Log (string.Format (" crosshair slider {0}", a));
+		//Debug.Log (string.Format (" crosshair slider {0}", a));
 
 
 		if (a >= 0 && a < 10)
