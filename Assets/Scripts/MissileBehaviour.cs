@@ -121,14 +121,14 @@ public class MissileBehaviour : MonoBehaviour {
 					_networkView.RPC("SharePoints", RPCMode.AllBuffered, Network.AllocateViewID(), Network.player.ipAddress, _points[Network.player.ipAddress]);
 				}
 			}
+
+			GetComponentInChildren<MeshRenderer> ().enabled = false;
+			
+			yield return new WaitForSeconds(4);
+			
+			Destroy (explosion);
+			Network.Destroy (this.gameObject);
 		}
-
-		GetComponentInChildren<MeshRenderer> ().enabled = false;
-
-		yield return new WaitForSeconds(4);
-
-		Destroy (explosion);
-		Network.Destroy (this.gameObject);
 	}
 
 	private void DisplayPoints()
