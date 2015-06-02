@@ -17,7 +17,7 @@ public class NetworkBehaviour : MonoBehaviour
 		_networkView = gameObject.AddComponent<NetworkView> ();
 		settings = gameObject.GetComponent<SettingsBehaviour> ();
 
-		spawnPoints = new Vector3[] {new Vector3 (85f, 20f, 12f), new Vector3 (96f, 20f, 317f), new Vector3 (368f, 24f, 449f)};
+		spawnPoints = new Vector3[] {new Vector3 (85f, 20f, 12f), new Vector3 (71f, 20f, 29f), new Vector3 (129f, 24f, 28f)};
 	}
 	
 	private void StartServer()
