@@ -6,6 +6,7 @@ public class GUIBehaviour : MonoBehaviour {
 	public GUIText GUITime;
 	public GUIText GUICountdown;
 	public WheelCollider WheelColFL;
+	public GUIText GUInextMissile;
 	
 	private float _pastTime = 0;
 	private bool _isFinished;
