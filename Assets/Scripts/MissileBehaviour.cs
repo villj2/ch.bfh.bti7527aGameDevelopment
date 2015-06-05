@@ -18,6 +18,7 @@ public class MissileBehaviour : MonoBehaviour {
 	private Dictionary<string, int> _points;
 	private GUIText _guiPoints;
 	private NetworkView _networkView;
+	private GameObject _explosion;
 
 	// Use this for initialization
 	void Start () {
@@ -76,8 +77,8 @@ public class MissileBehaviour : MonoBehaviour {
 	{
 		yield return new WaitForSeconds (1);
 
-		GameObject explosion = (GameObject)Instantiate (Resources.Load ("PrefabExplosion"));
-		explosion.transform.position = transform.position;
+		_explosion = (GameObject)Instantiate (Resources.Load ("PrefabExplosion"));
+		_explosion.transform.position = transform.position;
 
 		switch (Random.Range (0, 3)) {
 		case 1:
@@ -122,18 +123,18 @@ public class MissileBehaviour : MonoBehaviour {
 			}
 
 			GetComponentInChildren<MeshRenderer> ().enabled = false;
-		}
 
-		yield return new WaitForSeconds (4);
+			yield return new WaitForSeconds (4);
 
-		Destroy (explosion);
-
-		if (GetComponent<NetworkView> ().isMine)
-		{
 			Network.Destroy (this.gameObject);
 			//Network.Destroy (this.GetComponent<NetworkView>().viewID);
-			Destroy (this);
+			//Destroy (this);
 		}
+	}
+
+	void OnDestroy()
+	{
+		Destroy (_explosion);
 	}
 
 	private void DisplayPoints()
