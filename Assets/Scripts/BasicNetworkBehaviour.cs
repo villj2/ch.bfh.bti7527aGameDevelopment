@@ -72,6 +72,10 @@ public class BasicNetworkBehaviour : MonoBehaviour {
 			return;
 		if (float.IsNaN (duration))
 			return;
+		if (isQuaternionZero (_syncRotationEnd)) 
+			return;
+		if (isQuaternionZero (_syncRotationStart))
+			return;
 
 
 		rigidbody.position = Vector3.Lerp(_syncPosStart, _syncPosEnd, duration);
@@ -80,6 +84,9 @@ public class BasicNetworkBehaviour : MonoBehaviour {
 
 	private bool isQuaternionNAN(Quaternion q) {
 		return float.IsNaN(q.x) || float.IsNaN(q.y) || float.IsNaN(q.z) || float.IsNaN(q.w);
+	}
+	private bool isQuaternionZero(Quaternion q){
+		return (q.x  == 0f) || f(q.y  == 0f) || (q.z  == 0f) || (q.w  == 0f);
 	}
 
 	protected virtual void OnOpponentUpdate() {
