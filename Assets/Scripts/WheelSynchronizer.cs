@@ -20,6 +20,21 @@ public class WheelSynchronizer
 
 	public void SyncedMovement(float duration)
 	{ 		
+		if (duration == 0f) {
+			return;
+		}
+		
+		if(BasicNetworkBehaviour.isQuaternionNAN(syncRotationStart)) 
+			return;
+		if(BasicNetworkBehaviour.isQuaternionNAN(syncRotationEnd)) 
+			return;
+		if (float.IsNaN (duration))
+			return;
+		if (BasicNetworkBehaviour.isQuaternionZero(syncRotationEnd)) 
+			return;
+		if (BasicNetworkBehaviour.isQuaternionZero(syncRotationStart))
+			return;
+
 		wheel.rotation = Quaternion.Lerp (syncRotationStart, syncRotationEnd, duration);
 	}
 	
