@@ -62,30 +62,34 @@ public class BasicNetworkBehaviour : MonoBehaviour {
 	
 	protected virtual void SyncedMovement(float duration)
 	{ 
-		if (duration == 0f) {
-			return;
-		}
 
-		if(isQuaternionNAN(_syncRotationStart)) 
-			return;
-		if(isQuaternionNAN(_syncRotationEnd)) 
-			return;
-		if (float.IsNaN (duration))
-			return;
-		if (isQuaternionZero (_syncRotationEnd)) 
-			return;
-		if (isQuaternionZero (_syncRotationStart))
-			return;
-
-		rigidbody.position = Vector3.Lerp(_syncPosStart, _syncPosEnd, duration);
-		rigidbody.rotation = Quaternion.Lerp (_syncRotationStart, _syncRotationEnd, duration);
+		rigidbody.position = BasicNetworkBehaviour.LerpVector3 (_syncPosStart, _syncPosEnd, duration);
+		rigidbody.rotation = BasicNetworkBehaviour.LerpQuaternion (_syncRotationStart, _syncRotationEnd, duration);
 	}
 
-	public static bool isQuaternionNAN(Quaternion q) {
+	public static Quaternion LerpQuaternion(Quaternion start, Quaternion end, float duration)
+	{
+		if (duration == 0f || float.IsNaN (duration) || isQuaternionNAN (start) || isQuaternionZero (start) || isQuaternionNAN (end) || isQuaternionZero (end)) {
+			return end;
+		} else {
+			return Quaternion.Lerp (start, end, duration);
+		}
+	}
+
+	public static Vector3 LerpVector3(Vector3 start, Vector3 end, float duration)
+	{
+		if (duration == 0f || float.IsNaN (duration)) {
+			return end;
+		} else {
+			return Vector3.Lerp(start, end, duration);
+		}
+	}
+
+	private static bool isQuaternionNAN(Quaternion q) {
 		return float.IsNaN(q.x) || float.IsNaN(q.y) || float.IsNaN(q.z) || float.IsNaN(q.w);
 	}
 
-	public static bool isQuaternionZero(Quaternion q){
+	private static bool isQuaternionZero(Quaternion q){
 		return (q.x  == 0f) || (q.y  == 0f) || (q.z  == 0f) || (q.w  == 0f);
 	}
 
