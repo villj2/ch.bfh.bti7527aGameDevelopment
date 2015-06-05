@@ -74,9 +74,9 @@ public class MissileBehaviour : MonoBehaviour {
 
 	IEnumerator Detonate()
 	{
-		yield return new WaitForSeconds(1);
+		yield return new WaitForSeconds (1);
 
-		GameObject explosion = (GameObject)Instantiate(Resources.Load("PrefabExplosion"));
+		GameObject explosion = (GameObject)Instantiate (Resources.Load ("PrefabExplosion"));
 		explosion.transform.position = transform.position;
 
 		switch (Random.Range (0, 3)) {
@@ -94,45 +94,46 @@ public class MissileBehaviour : MonoBehaviour {
 		}
 
 		// make sure only own missiles gather points
-		if (GetComponent<NetworkView> ().isMine) 
-		{
-			GameObject[] cars = GameObject.FindGameObjectsWithTag("PlayerCar");
+		if (GetComponent<NetworkView> ().isMine) {
+			GameObject[] cars = GameObject.FindGameObjectsWithTag ("PlayerCar");
 			
 			foreach (GameObject car in cars) {
 				float distanceToCar = Vector3.Distance (this.gameObject.transform.position, car.gameObject.transform.position);
 				bool isOpponent = !car.GetComponent<NetworkView> ().isMine;
 				
 				//if(true)
-				if(isOpponent)
-				{
-					int pointsGathered = Mathf.Max((int)(-100 / 12 * distanceToCar + 100), 0);
+				if (isOpponent) {
+					int pointsGathered = Mathf.Max ((int)(-100 / 12 * distanceToCar + 100), 0);
 					
 					// check if key exists
 					int item;
-					_points.TryGetValue(Network.player.ipAddress, out item);
-					if(item == 0)_points[Network.player.ipAddress] = 0;
+					_points.TryGetValue (Network.player.ipAddress, out item);
+					if (item == 0)
+						_points [Network.player.ipAddress] = 0;
 					
 					// add points
-					_points[Network.player.ipAddress] += pointsGathered;
+					_points [Network.player.ipAddress] += pointsGathered;
 					
-					DisplayPoints();
+					DisplayPoints ();
 					
 					// sync Points-Dictionary
-					_networkView.RPC("SharePoints", RPCMode.AllBuffered, Network.AllocateViewID(), Network.player.ipAddress, _points[Network.player.ipAddress]);
+					_networkView.RPC ("SharePoints", RPCMode.AllBuffered, Network.AllocateViewID (), Network.player.ipAddress, _points [Network.player.ipAddress]);
 				}
 			}
 
 			GetComponentInChildren<MeshRenderer> ().enabled = false;
-			
-			yield return new WaitForSeconds(4);
-			
-			Destroy (explosion);
+		}
+
+		yield return new WaitForSeconds (4);
+
+		Destroy (explosion);
+
+		if (GetComponent<NetworkView> ().isMine)
+		{
 			Network.Destroy (this.gameObject);
 			//Network.Destroy (this.GetComponent<NetworkView>().viewID);
 			Destroy (this);
 		}
-
-
 	}
 
 	private void DisplayPoints()
