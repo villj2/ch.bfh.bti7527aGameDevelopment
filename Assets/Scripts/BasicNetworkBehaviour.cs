@@ -27,7 +27,7 @@ public class BasicNetworkBehaviour : MonoBehaviour {
 		isInitialized = true;
 	}
 
-	void Update()
+	void FixedUpdate()
 	{ 
 		if (Application.loadedLevel == 1 && isOpponent) {
 			_syncTime += Time.deltaTime;
