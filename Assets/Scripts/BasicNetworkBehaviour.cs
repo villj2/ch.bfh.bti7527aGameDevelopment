@@ -69,8 +69,13 @@ public class BasicNetworkBehaviour : MonoBehaviour {
 
 	public static Quaternion LerpQuaternion(Quaternion start, Quaternion end, float duration)
 	{
-		if (duration == 0f || float.IsNaN (duration) || isQuaternionNAN (start) || isQuaternionZero (start) || isQuaternionNAN (end) || isQuaternionZero (end)) {
-			return end;
+		if (duration == 0f || float.IsNaN (duration) || float.IsInfinity(duration) || isQuaternionNAN (start) || isQuaternionZero (start) || isQuaternionNAN (end) || isQuaternionZero (end)) {
+			if (!isQuaternionNAN (end) && !isQuaternionZero (end)) {
+				return end;
+			} else if (!isQuaternionNAN (start) && !isQuaternionZero (start)) {
+				return start;
+			}
+			return Quaternion.identity;
 		} else {
 			return Quaternion.Lerp (start, end, duration);
 		}
@@ -78,7 +83,7 @@ public class BasicNetworkBehaviour : MonoBehaviour {
 
 	public static Vector3 LerpVector3(Vector3 start, Vector3 end, float duration)
 	{
-		if (duration == 0f || float.IsNaN (duration)) {
+		if (duration == 0f || float.IsNaN (duration) || float.IsInfinity(duration)) {
 			return end;
 		} else {
 			return Vector3.Lerp(start, end, duration);
@@ -90,7 +95,7 @@ public class BasicNetworkBehaviour : MonoBehaviour {
 	}
 
 	private static bool isQuaternionZero(Quaternion q){
-		return (q.x  == 0f) || (q.y  == 0f) || (q.z  == 0f) || (q.w  == 0f);
+		return (q.x  == 0f) && (q.y  == 0f) && (q.z  == 0f) && (q.w  == 0f);
 	}
 
 	protected virtual void OnOpponentUpdate() {

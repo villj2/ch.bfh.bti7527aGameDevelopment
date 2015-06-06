@@ -48,7 +48,7 @@ public class TurretBehavioiur : MonoBehaviour {
 
 		if (Input.GetMouseButtonDown(0) && _canFire )
 		{
-			LaunchMissile();
+			LaunchMissile(transform);
 			_canFire = false;
 		}
 		if (Input.GetKeyDown (KeyCode.G)) {
@@ -56,8 +56,7 @@ public class TurretBehavioiur : MonoBehaviour {
 				Transform c;
 				c = transform;
 				c.RotateAround(transform.position , Vector3.right,10f*i);
-				GameObject missile = (GameObject)Network.Instantiate(Resources.Load("PrefabMissile"),  Vector3.zero, Quaternion.identity, 0);
-				missile.GetComponent<MissileBehaviour> ().Launch (c);
+				LaunchMissile(c);
 
 //				Debug.Log (string.Format ("dani {0}, {1}, {2}", c.position
 
@@ -65,9 +64,9 @@ public class TurretBehavioiur : MonoBehaviour {
 		}
 	}
 
-	private void LaunchMissile()
+	private void LaunchMissile(Transform trans)
 	{
-		GameObject missile = (GameObject)Network.Instantiate(Resources.Load("PrefabMissile"),  Vector3.zero, Quaternion.identity, 0);
-		missile.GetComponent<MissileBehaviour> ().Launch (transform);
+		GameObject missile = (GameObject)Network.Instantiate(Resources.Load("PrefabMissile"),  trans.position, trans.rotation, 0);
+		missile.GetComponent<MissileBehaviour> ().Launch ();
 	}
 }

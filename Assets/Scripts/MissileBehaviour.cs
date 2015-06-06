@@ -62,14 +62,8 @@ public class MissileBehaviour : MonoBehaviour {
 	
 	}
 
-	public void Launch(Transform transformTurret)
+	public void Launch()
 	{
-		transform.position = transformTurret.position;
-		transform.rotation = transformTurret.rotation;
-		
-		transform.Rotate (Vector3.forward * 180);
-		transform.Translate (Vector3.up * -0.5f, Space.Self);
-		
 		GetComponent<Rigidbody> ().AddForce (transform.forward * LaunchForce);
 	}
 
