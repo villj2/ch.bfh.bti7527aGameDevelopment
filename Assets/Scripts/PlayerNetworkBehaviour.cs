@@ -8,6 +8,7 @@ public class PlayerNetworkBehaviour : BasicNetworkBehaviour {
 	private WheelSynchronizer wfr;
 	private WheelSynchronizer wrl;
 	private WheelSynchronizer wrr;
+	private TurretSynchronizer turretSynchronizer;
 
 	protected override void initialize ()
 	{
@@ -17,19 +18,18 @@ public class PlayerNetworkBehaviour : BasicNetworkBehaviour {
 		wfr = new WheelSynchronizer (trans.Find ("Wheels/FR"));
 		wrl = new WheelSynchronizer (trans.Find ("Wheels/RL"));
 		wrr = new WheelSynchronizer (trans.Find ("Wheels/RR"));
+		turretSynchronizer = new TurretSynchronizer (trans.Find("Turret"));
 	}
 
 	protected override void initializeOpponent ()
 	{
 		base.initializeOpponent ();
 		GetComponent<CarBehaviour>().enabled = false;
-		Transform turret = rigidbody.transform.Find("Turret");
-		turret.GetComponent<TurretBehavioiur>().enabled = false;
-		turret.GetComponent<UnityStandardAssets.Utility.SimpleMouseRotator> ().enabled = false;
 		wfl.DisableWheelScript ();
 		wfr.DisableWheelScript ();
 		wrl.DisableWheelScript ();
 		wrr.DisableWheelScript ();
+		turretSynchronizer.DisableTurretScript ();
 	}
 
 	protected override void SyncedMovement(float duration)
@@ -40,6 +40,7 @@ public class PlayerNetworkBehaviour : BasicNetworkBehaviour {
 		wfr.SyncedMovement (duration);
 		wrl.SyncedMovement (duration);
 		wrr.SyncedMovement (duration);
+		turretSynchronizer.SyncedMovement (duration);
 
 	}
 	
@@ -50,6 +51,7 @@ public class PlayerNetworkBehaviour : BasicNetworkBehaviour {
 		wfr.OnOutgonigSync (stream, info);
 		wrl.OnOutgonigSync (stream, info);
 		wrr.OnOutgonigSync (stream, info);
+		turretSynchronizer.OnOutgonigSync (stream, info);
 	}
 	
 	protected override void OnIncomingSync(BitStream stream, NetworkMessageInfo info) {
@@ -59,6 +61,7 @@ public class PlayerNetworkBehaviour : BasicNetworkBehaviour {
 		wfr.OnIncomingSync (stream, info);
 		wrl.OnIncomingSync (stream, info);
 		wrr.OnIncomingSync (stream, info);
+		turretSynchronizer.OnIncomingSync (stream, info);
 	}
 
 }
