@@ -47,7 +47,9 @@ public class Prefs : MonoBehaviour {
 		PlayerPrefs.SetFloat ("suspensionSpring", suspensionSpring);
 		PlayerPrefs.SetFloat ("suspensionDamper", suspensionDamper);
 
-		PlayerPrefs.SetString ("crosshair", crosshair.name);
+		if (crosshair != null) {
+			PlayerPrefs.SetString ("crosshair", crosshair.name);
+		}
 	}
 
 	public static void SetBodyMaterial(ref Material bodyMat)
