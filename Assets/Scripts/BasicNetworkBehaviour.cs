@@ -70,7 +70,9 @@ public class BasicNetworkBehaviour : MonoBehaviour {
 	public static Quaternion LerpQuaternion(Quaternion start, Quaternion end, float duration)
 	{
 		if (duration == 0f || float.IsNaN (duration) || float.IsInfinity(duration) || isQuaternionNAN (start) || isQuaternionZero (start) || isQuaternionNAN (end) || isQuaternionZero (end)) {
-			if (!isQuaternionNAN (end) && !isQuaternionZero (end)) {
+			if (float.IsInfinity(duration) && !isQuaternionNAN (start) && !isQuaternionZero (start)) {
+				return start;
+			} else if (!isQuaternionNAN (end) && !isQuaternionZero (end)) {
 				return end;
 			} else if (!isQuaternionNAN (start) && !isQuaternionZero (start)) {
 				return start;
@@ -83,7 +85,9 @@ public class BasicNetworkBehaviour : MonoBehaviour {
 
 	public static Vector3 LerpVector3(Vector3 start, Vector3 end, float duration)
 	{
-		if (duration == 0f || float.IsNaN (duration) || float.IsInfinity(duration)) {
+		if (float.IsInfinity (duration)) {
+			return start;
+		}else if (duration == 0f || float.IsNaN (duration)) {
 			return end;
 		} else {
 			return Vector3.Lerp(start, end, duration);
